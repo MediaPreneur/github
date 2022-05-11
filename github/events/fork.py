@@ -28,7 +28,7 @@ class EventFork(EventBase):
         :return:
         """
 
-        self.sdk.log("Fork event payload taken {}".format(payload))
+        self.sdk.log(f"Fork event payload taken {payload}")
 
         try:
 
@@ -36,14 +36,10 @@ class EventFork(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process ForkEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process ForkEvent payload because of {e}')
 
         await self.send(
             chat['chat'],
-            '🦍 <a href=\"{}\">{}</a> forked <a href=\"{}\">{}</a>'.format(
-                self.sender.html_url,
-                self.sender.login,
-                self.repository.html_url,
-                self.repository.full_name),
-            'HTML'
+            f'🦍 <a href="{self.sender.html_url}">{self.sender.login}</a> forked <a href="{self.repository.html_url}">{self.repository.full_name}</a>',
+            'HTML',
         )

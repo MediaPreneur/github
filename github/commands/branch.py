@@ -6,7 +6,7 @@ from .base import CommandBase
 class CommandBranch(CommandBase):
 
     async def __call__(self, payload):
-        self.sdk.log("/github_branch handler fired with payload {}".format(payload))
+        self.sdk.log(f"/github_branch handler fired with payload {payload}")
 
         self.set_bot(payload)
 
@@ -23,5 +23,5 @@ class CommandBranch(CommandBase):
 
         await self.send(
             payload["chat"],
-            "You will be notified about commits in {} branch".format(branch)
+            f"You will be notified about commits in {branch} branch",
         )

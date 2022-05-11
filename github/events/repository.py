@@ -28,7 +28,7 @@ class EventRepository(EventBase):
         :return:
         """
 
-        self.sdk.log("Repository event payload taken {}".format(payload))
+        self.sdk.log(f"Repository event payload taken {payload}")
 
         try:
 
@@ -37,7 +37,7 @@ class EventRepository(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process RepositoryEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process RepositoryEvent payload because of {e}')
 
         action = payload['action']
 
@@ -46,7 +46,7 @@ class EventRepository(EventBase):
         }
 
         if action not in available_actions:
-            self.sdk.log('Unsupported Repositories action: {}'.format(action))
+            self.sdk.log(f'Unsupported Repositories action: {action}')
             return
 
         # call action handler
@@ -61,12 +61,7 @@ class EventRepository(EventBase):
         """
         await self.send(
             chat_id,
-            '🦍 <a href=\"{}\">{}</a> created a repository <a href=\"{}\">{}</a> in the {} organization'.format(
-                    self.sender.html_url,
-                    self.sender.login,
-                    self.repository.html_url,
-                    self.repository.full_name,
-                    self.organization.login),
-                'HTML'
-            )
+            f'🦍 <a href="{self.sender.html_url}">{self.sender.login}</a> created a repository <a href="{self.repository.html_url}">{self.repository.full_name}</a> in the {self.organization.login} organization',
+            'HTML',
+        )
 

@@ -42,7 +42,7 @@ class EventDiscussionComment(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process DiscussionCommentEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process DiscussionCommentEvent payload because of {e}')
 
         action = payload['action']
 
@@ -51,7 +51,7 @@ class EventDiscussionComment(EventBase):
         }
 
         if action not in available_actions:
-            self.sdk.log('Unsupported DiscussionComment action: {}'.format(action))
+            self.sdk.log(f'Unsupported DiscussionComment action: {action}')
             return
 
         # call action handler
@@ -65,14 +65,11 @@ class EventDiscussionComment(EventBase):
         :return:
         """
 
-        message = "🤓{} added <a href=\"{}\">comment</a> to {} discussion <code>«{}»</code> [<a href=\"{}\">{}</a>]".format(
-                        self.sender.login,
-                        self.comment.html_url,
-                        self.discussion.category.name,
-                        html.escape(self.discussion.title),
-                        self.repository.html_url,
-                        self.repository.name
-                    ) + "\n"
+        message = (
+            f'🤓{self.sender.login} added <a href="{self.comment.html_url}">comment</a> to {self.discussion.category.name} discussion <code>«{html.escape(self.discussion.title)}»</code> [<a href="{self.repository.html_url}">{self.repository.name}</a>]'
+            + "\n"
+        )
+
 
         await self.send(
             chat_id,

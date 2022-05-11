@@ -47,7 +47,7 @@ class EventPush(EventBase):
         :return:
         """
 
-        self.sdk.log("Push event payload taken {}".format(payload))
+        self.sdk.log(f"Push event payload taken {payload}")
 
         try:
 
@@ -58,15 +58,15 @@ class EventPush(EventBase):
                 self.commits.append(Commit(commit))
 
         except Exception as e:
-            self.sdk.log('Cannot process PingEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process PingEvent payload because of {e}')
 
         if bool(payload['deleted']):
-            message = "Branch {} has been deleted".format(payload['ref'])
+            message = f"Branch {payload['ref']} has been deleted"
             self.sdk.log(message)
             return
 
         if bool(payload['created']):
-            message = "Branch {} has been created".format(payload['ref'])
+            message = f"Branch {payload['ref']} has been created"
             self.sdk.log(message)
 
         try:
@@ -74,7 +74,7 @@ class EventPush(EventBase):
             if 'branch' in chat and chat['branch'] != '*' and chat['branch'] != branch_name:
                 return
         except Exception as e:
-            self.sdk.log("Exception: {}".format(e))
+            self.sdk.log(f"Exception: {e}")
 
         # Start building message
         verbose_output = chat.get("verbose", False)
@@ -84,8 +84,11 @@ class EventPush(EventBase):
             len(self.commits),
             "commits" if len(self.commits) > 1 else "commit",
             payload['ref'],
-            '<a href="{}">({})</a>'.format(payload['repository']['html_url'], payload['repository']['full_name']) if not verbose_output else ""
+            ""
+            if verbose_output
+            else f"""<a href="{payload['repository']['html_url']}">({payload['repository']['full_name']})</a>""",
         )
+
 
         # Compose lists of added|removed|modified filenames
 

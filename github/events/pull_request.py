@@ -49,7 +49,7 @@ class EventPullRequest(EventBase):
         :return:
         """
 
-        self.sdk.log("PullRequest event payload taken {}".format(payload))
+        self.sdk.log(f"PullRequest event payload taken {payload}")
 
         try:
             self.pull_request = PullRequest(payload['pull_request'])
@@ -57,7 +57,7 @@ class EventPullRequest(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process PullRequest payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process PullRequest payload because of {e}')
 
         action = payload['action']
 
@@ -69,7 +69,7 @@ class EventPullRequest(EventBase):
         }
 
         if action not in available_actions:
-            self.sdk.log('Unsupported PullRequest action: {}'.format(action))
+            self.sdk.log(f'Unsupported PullRequest action: {action}')
             return
 
         # call action handler

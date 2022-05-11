@@ -38,7 +38,7 @@ class EventPullRequestReview(EventBase):
         :return:
         """
 
-        self.sdk.log("PullRequestReview event payload taken {}".format(payload))
+        self.sdk.log(f"PullRequestReview event payload taken {payload}")
 
         try:
             self.pull_request = PullRequest(payload['pull_request'])
@@ -48,7 +48,7 @@ class EventPullRequestReview(EventBase):
             self.action = payload['action']
 
         except Exception as e:
-            self.sdk.log('Cannot process PullRequestReview payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process PullRequestReview payload because of {e}')
 
         state = self.review.state
 
@@ -59,11 +59,11 @@ class EventPullRequestReview(EventBase):
         }
 
         if state not in available_states:
-            self.sdk.log('Unsupported PullRequestReview state: {}'.format(state))
+            self.sdk.log(f'Unsupported PullRequestReview state: {state}')
             return
 
         if self.action != "submitted":
-            self.sdk.log('PullRequestReview action is not equal "submitted": {}'.format(state))
+            self.sdk.log(f'PullRequestReview action is not equal "submitted": {state}')
             return
 
         # call action handler

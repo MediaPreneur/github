@@ -28,7 +28,7 @@ class EventWatch(EventBase):
         :return:
         """
 
-        self.sdk.log("Watch event payload taken {}".format(payload))
+        self.sdk.log(f"Watch event payload taken {payload}")
 
         try:
 
@@ -36,7 +36,7 @@ class EventWatch(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process WatchEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process WatchEvent payload because of {e}')
 
         await self.send(
             chat['chat'],

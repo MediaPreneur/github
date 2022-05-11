@@ -96,5 +96,6 @@ class PullRequest:
         # Requested reviewers
         self.requested_reviewers = []
         if 'requested_reviewers' in data:
-            for reviewer in data['requested_reviewers']:
-                self.requested_reviewers.append(User(reviewer))
+            self.requested_reviewers.extend(
+                User(reviewer) for reviewer in data['requested_reviewers']
+            )

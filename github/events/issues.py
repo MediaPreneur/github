@@ -40,7 +40,7 @@ class EventIssues(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process IssuesEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process IssuesEvent payload because of {e}')
 
         action = payload['action']
 
@@ -51,7 +51,7 @@ class EventIssues(EventBase):
         }
 
         if action not in available_actions:
-            self.sdk.log('Unsupported Issues action: {}'.format(action))
+            self.sdk.log(f'Unsupported Issues action: {action}')
             return
 
         # call action handler
@@ -65,12 +65,11 @@ class EventIssues(EventBase):
         :return:
         """
 
-        message = "✏️ {} opened new issue «<code>{}</code>» [<a href=\"{}\">{}</a>]".format(
-            self.sender.login,
-            html.escape(self.issue.title),
-            self.repository.html_url,
-            self.repository.name
-        ) + "\n\n"
+        message = (
+            f'✏️ {self.sender.login} opened new issue «<code>{html.escape(self.issue.title)}</code>» [<a href="{self.repository.html_url}">{self.repository.name}</a>]'
+            + "\n\n"
+        )
+
 
         # if len(self.issue.body):
         #     message += html.escape(self.issue.body) + "\n\n"
@@ -90,12 +89,11 @@ class EventIssues(EventBase):
         :param payload: GitHub payload
         :return:
         """
-        message = "☑️ {} closed issue «<code>{}</code>» [<a href=\"{}\">{}</a>]".format(
-            self.sender.login,
-            html.escape(self.issue.title),
-            self.repository.html_url,
-            self.repository.name
-        ) + "\n\n"
+        message = (
+            f'☑️ {self.sender.login} closed issue «<code>{html.escape(self.issue.title)}</code>» [<a href="{self.repository.html_url}">{self.repository.name}</a>]'
+            + "\n\n"
+        )
+
 
         # if len(self.issue.body):
         #     message += html.escape(self.issue.body) + "\n\n"

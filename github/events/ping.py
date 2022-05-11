@@ -32,7 +32,7 @@ class EventPing(EventBase):
         :return:
         """
 
-        self.sdk.log("Ping event payload taken {}".format(payload))
+        self.sdk.log(f"Ping event payload taken {payload}")
 
         if "repository" in payload:
             await self.process_repository_event(payload, chat)
@@ -49,12 +49,12 @@ class EventPing(EventBase):
             self.hook = Hook(payload['hook'])
 
         except Exception as e:
-            self.sdk.log('Cannot process PingEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process PingEvent payload because of {e}')
 
         await self.send(
             chat['chat'],
-            '👏 Repository {} successfully linked. Boom.'.format(self.repository.full_name),
-            'HTML'
+            f'👏 Repository {self.repository.full_name} successfully linked. Boom.',
+            'HTML',
         )
 
     async def process_organization_event(self, payload, chat):
@@ -63,10 +63,10 @@ class EventPing(EventBase):
             self.hook = Hook(payload['hook'])
 
         except Exception as e:
-            self.sdk.log('Cannot process PingEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process PingEvent payload because of {e}')
 
         await self.send(
             chat['chat'],
-            '👏 Organization {} successfully linked. Boom.'.format(self.organization.login),
-            'HTML'
+            f'👏 Organization {self.organization.login} successfully linked. Boom.',
+            'HTML',
         )

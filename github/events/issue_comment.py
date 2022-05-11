@@ -42,7 +42,7 @@ class EventIssueComment(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process IssueCommentEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process IssueCommentEvent payload because of {e}')
 
         action = payload['action']
 
@@ -51,7 +51,7 @@ class EventIssueComment(EventBase):
         }
 
         if action not in available_actions:
-            self.sdk.log('Unsupported IssueComment action: {}'.format(action))
+            self.sdk.log(f'Unsupported IssueComment action: {action}')
             return
 
         # call action handler
@@ -65,16 +65,12 @@ class EventIssueComment(EventBase):
         :return:
         """
 
-        issue_type = 'Issue'
-        if self.issue.pull_request_url:
-            issue_type = 'Pull request'
+        issue_type = 'Pull request' if self.issue.pull_request_url else 'Issue'
+        message = (
+            f'💬 <code>{issue_type} «{html.escape(self.issue.title)}»</code> [<a href="{self.repository.html_url}">{self.repository.name}</a>]'
+            + "\n\n"
+        )
 
-        message = "💬 <code>{} «{}»</code> [<a href=\"{}\">{}</a>]".format(
-                        issue_type,
-                        html.escape(self.issue.title),
-                        self.repository.html_url,
-                        self.repository.name
-                    ) + "\n\n"
 
         if len(self.comment.body):
             # Remove blank and citation lines (starting with "> ")
@@ -84,7 +80,8 @@ class EventIssueComment(EventBase):
             truncated_body = author_body[:250] + ("", "...")[len(author_body) > 250]
             message += truncated_body + "\n\n"
 
-        message += "— {} | <a href=\"{}\">Open message</a>".format(self.sender.login, self.comment.html_url)
+        message += f'— {self.sender.login} | <a href="{self.comment.html_url}">Open message</a>'
+
 
         await self.send(
             chat_id,

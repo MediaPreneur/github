@@ -88,7 +88,7 @@ class Github:
         }
 
         if event_name not in events:
-            self.sdk.log("Github webhook callback: unsupported event taken: {}".format(event_name))
+            self.sdk.log(f"Github webhook callback: unsupported event taken: {event_name}")
             return {
                 'status': 404
             }
@@ -97,7 +97,7 @@ class Github:
             # GitHub might pass JSON as request body
             payload = json.loads(request['text'])
         except Exception as e:
-            self.sdk.log('Payload from GitHub is not JSON: {}'.format(e))
+            self.sdk.log(f'Payload from GitHub is not JSON: {e}')
             self.sdk.hawk.catch()
 
             return {
@@ -115,7 +115,7 @@ class Github:
             }
 
         except Exception as e:
-            self.sdk.log('Cannot handle request from GitHub: {}'.format(e))
+            self.sdk.log(f'Cannot handle request from GitHub: {e}')
             self.sdk.hawk.catch()
 
             return {

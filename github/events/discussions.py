@@ -39,7 +39,7 @@ class EventDiscussions(EventBase):
             self.sender = User(payload['sender'])
 
         except Exception as e:
-            self.sdk.log('Cannot process DiscussionsEvent payload because of {}'.format(e))
+            self.sdk.log(f'Cannot process DiscussionsEvent payload because of {e}')
 
         action = payload['action']
 
@@ -49,7 +49,7 @@ class EventDiscussions(EventBase):
         }
 
         if action not in available_actions:
-            self.sdk.log('Unsupported Discussions action: {}'.format(action))
+            self.sdk.log(f'Unsupported Discussions action: {action}')
             return
 
         # call action handler
@@ -63,13 +63,11 @@ class EventDiscussions(EventBase):
         :return:
         """
 
-        message = "🗣{}: {} created new discussion «<code>{}</code>» [<a href=\"{}\">{}</a>]".format(
-                        self.discussion.category.name,
-                        self.sender.login,
-                        html.escape(self.discussion.title),
-                        self.repository.html_url,
-                        self.repository.name
-                    ) + "\n\n"
+        message = (
+            f'🗣{self.discussion.category.name}: {self.sender.login} created new discussion «<code>{html.escape(self.discussion.title)}</code>» [<a href="{self.repository.html_url}">{self.repository.name}</a>]'
+            + "\n\n"
+        )
+
 
         message += self.discussion.html_url
 
@@ -87,12 +85,11 @@ class EventDiscussions(EventBase):
         :return:
         """
 
-        message = "🤭️ {} deleted discussion «<code>{}</code>» [<a href=\"{}\">{}</a>]".format(
-                        self.sender.login,
-                        html.escape(self.discussion.title),
-                        self.repository.html_url,
-                        self.repository.name
-                    ) + "\n\n"
+        message = (
+            f'🤭️ {self.sender.login} deleted discussion «<code>{html.escape(self.discussion.title)}</code>» [<a href="{self.repository.html_url}">{self.repository.name}</a>]'
+            + "\n\n"
+        )
+
 
         await self.send(
             chat_id,
